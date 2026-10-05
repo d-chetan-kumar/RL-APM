@@ -94,7 +94,11 @@ At each time step $t$, the state vector $S_t \in \mathbb{R}^{50}$ consists of tw
 ### 2. Action Representation & Normalization (Dimension: 5)
 - Continuous action vector $a_t \in \mathbb{R}^5$ representing raw target logits.
 - **Normalization:** Softmax projection ensures valid allocations:
-  $$w_{t+1, i}^* = \frac{e^{a_{t, i} - \max(a_t)}}{\sum_{j=1}^5 e^{a_{t, j} - \max(a_t)}}$$
+
+  $$
+  w_{t+1, i}^* = \frac{e^{a_{t, i} - \max(a_t)}}{\sum_{j=1}^5 e^{a_{t, j} - \max(a_t)}}
+  $$
+
   Guarantees: $w_{t+1, i}^* \ge 0$ and $\sum_{i=1}^5 w_{t+1, i}^* = 1.0$.
 
 ### 3. Portfolio Initialization
@@ -103,22 +107,40 @@ At each time step $t$, the state vector $S_t \in \mathbb{R}^{50}$ consists of tw
 
 ### 4. Transaction Cost Model
 Rebalancing incurs proportional transaction fees based on turnover:
-$$\text{Turnover}_t = \sum_{i=1}^5 |w_{t+1, i}^* - w_{t, i}|$$
-$$\text{Cost}_t = \text{Turnover}_t \times \text{transaction\_cost} \times V_t$$
+
+$$
+\text{Turnover}_t = \sum_{i=1}^5 |w_{t+1, i}^* - w_{t, i}|
+$$
+
+$$
+\text{Cost}_t = \text{Turnover}_t \times \text{transaction\_cost} \times V_t
+$$
+
 - Default rate: `transaction_cost = 0.001` ($0.1\%$ per turnover unit).
 
 ### 5. Time-Step Transition & Look-Ahead Bias Prevention
 1. **Decision Time ($D_t$):** State $S_t$ is constructed strictly from observations up to and including date $D_t$.
 2. **Rebalancing:** Target weights $w_{t+1}^*$ are committed and transaction costs $\text{Cost}_t$ deducted.
 3. **Price Realization ($D_t \rightarrow D_{t+1}$):** Asset price movement occurs over the subsequent market interval:
-   $$r_{t+1, i} = \frac{P_{t+1, i}}{P_{t, i}} - 1$$
+   
+   $$
+   r_{t+1, i} = \frac{P_{t+1, i}}{P_{t, i}} - 1
+   $$
+
 4. **Portfolio Update:**
-   $$V_{t+1} = (V_t - \text{Cost}_t) \times \left(1 + \sum_{i=1}^5 w_{t+1, i}^* \cdot r_{t+1, i}\right)$$
+   
+   $$
+   V_{t+1} = (V_t - \text{Cost}_t) \times \left(1 + \sum_{i=1}^5 w_{t+1, i}^* \cdot r_{t+1, i}\right)
+   $$
 5. **Effective Drift:** Post-movement weights drift naturally before next decision step.
 6. **Time Advance:** Step advances to $t+1$, where new state $S_{t+1}$ reflects information at $D_{t+1}$. No future prices or indicators can leak into decision $a_t$.
 
 ### 6. Reward Formulation
-$$\text{Reward}_t = \text{Net\_Return}_t - \text{Risk\_Penalty} - \text{Cost\_Penalty}$$
+
+$$
+\text{Reward}_t = \text{Net\_Return}_t - \text{Risk\_Penalty} - \text{Cost\_Penalty}
+$$
+
 - $\text{Net\_Return}_t = (V_{t+1} - V_t) / V_t$
 - Configurable risk terms: `risk_penalty` (default: 0.0) and `transaction_cost_penalty` (default: 0.0).
 
