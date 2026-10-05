@@ -33,6 +33,9 @@ wheels/
 *.pth
 *.onnx
 
+# Allow tracking of our specific models
+!models/*.pth
+
 # Jupyter Notebooks
 .ipynb_checkpoints
 
