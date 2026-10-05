@@ -113,7 +113,7 @@ $$
 $$
 
 $$
-\text{Cost}_t = \text{Turnover}_t \times \text{transaction\_cost} \times V_t
+\text{Cost}_t = \text{Turnover}_t \times \text{transaction cost} \times V_t
 $$
 
 - Default rate: `transaction_cost = 0.001` ($0.1\%$ per turnover unit).
@@ -138,10 +138,10 @@ $$
 ### 6. Reward Formulation
 
 $$
-\text{Reward}_t = \text{Net\_Return}_t - \text{Risk\_Penalty} - \text{Cost\_Penalty}
+\text{Reward}_t = \text{Net Return}_t - \text{Risk Penalty} - \text{Cost Penalty}
 $$
 
-- $\text{Net\_Return}_t = (V_{t+1} - V_t) / V_t$
+- $\text{Net Return}_t = (V_{t+1} - V_t) / V_t$
 - Configurable risk terms: `risk_penalty` (default: 0.0) and `transaction_cost_penalty` (default: 0.0).
 
 ### 7. Running Environment Validation Tests
