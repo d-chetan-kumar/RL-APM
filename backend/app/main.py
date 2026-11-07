@@ -87,10 +87,11 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
-# Configure CORS for local frontend development (e.g., React + Vite on port 5173)
+# Configure CORS for frontend access (Vercel, Render, and local dev)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=CORS_ORIGINS,
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
