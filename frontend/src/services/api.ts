@@ -192,16 +192,32 @@ export const api = {
       _isLiveApi = true;
       return res;
     } catch {
-      if (request.date && FALLBACK_DAILY_ALLOCATIONS[request.date]) {
-        return {
-          date: request.date,
-          allocations: FALLBACK_DAILY_ALLOCATIONS[request.date],
-          total_weight: 1.0,
-          model: 'DDPG',
-          state_dimension: 50,
-          inference_type: 'historical out-of-sample validated policy (research cache)',
-          state_vector: Array(50).fill(0),
-        };
+      if (request.date) {
+        if (FALLBACK_DAILY_ALLOCATIONS[request.date]) {
+          return {
+            date: request.date,
+            allocations: FALLBACK_DAILY_ALLOCATIONS[request.date],
+            total_weight: 1.0,
+            model: 'DDPG',
+            state_dimension: 50,
+            inference_type: 'historical out-of-sample validated policy (research cache)',
+            state_vector: Array(50).fill(0),
+          };
+        }
+        const availableDates = Object.keys(FALLBACK_DAILY_ALLOCATIONS).sort();
+        const pastDates = availableDates.filter((d) => d <= request.date!);
+        const targetDate = pastDates.length > 0 ? pastDates[pastDates.length - 1] : availableDates[0];
+        if (targetDate && FALLBACK_DAILY_ALLOCATIONS[targetDate]) {
+          return {
+            date: targetDate,
+            allocations: FALLBACK_DAILY_ALLOCATIONS[targetDate],
+            total_weight: 1.0,
+            model: 'DDPG',
+            state_dimension: 50,
+            inference_type: `historical out-of-sample validated policy for ${targetDate} (research cache)`,
+            state_vector: Array(50).fill(0),
+          };
+        }
       }
       return FALLBACK_PREDICTION;
     }
