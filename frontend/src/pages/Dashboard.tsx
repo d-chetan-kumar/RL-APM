@@ -17,7 +17,7 @@ import { ErrorCard } from '../components/ui/ErrorCard';
 import { EquityCurveChart } from '../components/charts/EquityCurveChart';
 import { AllocationDonutChart } from '../components/charts/AllocationDonutChart';
 import { AllocationBarChart } from '../components/charts/AllocationBarChart';
-import { api } from '../services/api';
+import { api, isLiveApiConnected } from '../services/api';
 import type {
   BacktestMetricsResponse,
   EquityCurveResponse,
@@ -90,6 +90,23 @@ export const Dashboard: React.FC = () => {
 
   return (
     <div className="space-y-6 pb-12">
+      {!isLiveApiConnected() && (
+        <div className="bg-amber-50/90 border border-amber-200/90 rounded-xl px-4 py-3 flex items-center justify-between gap-3 text-xs text-amber-900 shadow-xs">
+          <div className="flex items-center gap-2.5">
+            <Sparkles className="w-4 h-4 text-amber-600 shrink-0" />
+            <span>
+              <strong>Standalone Research Mode:</strong> Displaying verified 2024 out-of-sample backtest results and policy allocations from research cache. Live FastAPI backend is offline.
+            </span>
+          </div>
+          <button
+            onClick={loadDashboardData}
+            className="text-[11px] font-semibold text-amber-800 hover:text-amber-900 underline shrink-0 cursor-pointer"
+          >
+            Check Backend
+          </button>
+        </div>
+      )}
+
       {/* Hero Section */}
       <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-card flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-1.5">

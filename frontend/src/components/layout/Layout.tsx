@@ -51,7 +51,7 @@ export const Layout: React.FC = () => {
   const checkHealth = async () => {
     try {
       const health = await api.getHealth();
-      setIsApiConnected(health.status === 'ok');
+      setIsApiConnected(health.status === 'ok' && !health.service.includes('Demo Mode'));
     } catch {
       setIsApiConnected(false);
     }

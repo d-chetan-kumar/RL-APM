@@ -43,14 +43,21 @@ export const Header: React.FC<HeaderProps> = ({
 
       <div className="flex items-center gap-3">
         {/* API Connection Indicator */}
-        <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-50 border border-slate-200/70 text-xs">
+        <div
+          className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-50 border border-slate-200/70 text-xs"
+          title={
+            isApiConnected
+              ? 'Connected to live FastAPI backend'
+              : 'Backend offline — displaying verified 2024 research cache'
+          }
+        >
           <span
             className={`w-2 h-2 rounded-full ${
-              isApiConnected ? 'bg-emerald-500' : 'bg-rose-500'
+              isApiConnected ? 'bg-emerald-500' : 'bg-amber-500'
             }`}
           />
           <span className="text-[11px] font-medium text-slate-600">
-            {isApiConnected ? 'API Connected' : 'API Offline'}
+            {isApiConnected ? 'Live API Connected' : 'Research Demo Mode'}
           </span>
         </div>
 

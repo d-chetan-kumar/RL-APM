@@ -43,8 +43,8 @@ export interface AssetSummary {
   date: string;
   close: number;
   daily_return: number;
-  sma_20: number;
-  sma_50: number;
+  sma_20?: number;
+  sma_50?: number;
   sma20_ratio: number;
   sma50_ratio: number;
   rsi: number;

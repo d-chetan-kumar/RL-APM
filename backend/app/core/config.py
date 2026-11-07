@@ -90,6 +90,11 @@ if not _origins:
         "http://127.0.0.1:5173",
         "http://localhost:3000",
         "http://127.0.0.1:3000",
+        "https://rl-apm.vercel.app",
+        "https://rl-apm-frontend.onrender.com",
     ]
+else:
+    if "https://rl-apm.vercel.app" not in _origins:
+        _origins.append("https://rl-apm.vercel.app")
 # Deduplicate while preserving order
 CORS_ORIGINS: List[str] = list(dict.fromkeys(_origins))

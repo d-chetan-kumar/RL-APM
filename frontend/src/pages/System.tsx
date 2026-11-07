@@ -3,7 +3,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card'
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import { ErrorCard } from '../components/ui/ErrorCard';
-import { api } from '../services/api';
+import { api, API_BASE_URL } from '../services/api';
 import type { HealthResponse, ModelInfoResponse } from '../types';
 import {
   ShieldCheck,
@@ -60,10 +60,10 @@ export const System: React.FC = () => {
       <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-card flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1.5">
-            <Badge variant={health?.status === 'ok' ? 'emerald' : 'rose'} size="sm">
-              {health?.status === 'ok' ? 'Operational' : 'Degraded / Offline'}
+            <Badge variant={health?.service?.includes('Demo Mode') ? 'amber' : health?.status === 'ok' ? 'emerald' : 'rose'} size="sm">
+              {health?.service?.includes('Demo Mode') ? 'Research Demo Mode' : health?.status === 'ok' ? 'Live Backend Connected' : 'Degraded / Offline'}
             </Badge>
-            <Badge variant="outline" size="sm">FastAPI + Uvicorn</Badge>
+            <Badge variant="outline" size="sm">FastAPI + PyTorch</Badge>
           </div>
           <h2 className="text-xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
             <ShieldCheck className="w-5 h-5 text-indigo-600" />
@@ -86,7 +86,7 @@ export const System: React.FC = () => {
             Refresh Status
           </Button>
           <a
-            href="http://127.0.0.1:8000/docs"
+            href={`${API_BASE_URL}/docs`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors"
@@ -109,16 +109,18 @@ export const System: React.FC = () => {
                 <Server className="w-4 h-4 text-slate-400" />
               </div>
               <div className="flex items-center gap-2">
-                {health?.status === 'ok' ? (
+                {health?.service?.includes('Demo Mode') ? (
+                  <CheckCircle2 className="w-5 h-5 text-amber-500" />
+                ) : health?.status === 'ok' ? (
                   <CheckCircle2 className="w-5 h-5 text-emerald-600" />
                 ) : (
                   <AlertTriangle className="w-5 h-5 text-rose-600" />
                 )}
                 <span className="text-sm font-bold text-slate-900">
-                  {health?.status === 'ok' ? 'Online' : 'Offline'}
+                  {health?.service?.includes('Demo Mode') ? 'Research Cache' : health?.status === 'ok' ? 'Live Online' : 'Offline'}
                 </span>
               </div>
-              <span className="text-[10px] text-slate-400 block mt-2">Port: 8000 • Host: 127.0.0.1</span>
+              <span className="text-[10px] text-slate-400 block mt-2 truncate" title={API_BASE_URL}>Target: {API_BASE_URL}</span>
             </Card>
 
             <Card className="p-4">
